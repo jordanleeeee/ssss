@@ -2,7 +2,7 @@ name: Build Gradle, new Docker image
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "relsase" ]
 
 permissions:
   contents: read
