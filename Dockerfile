@@ -1,4 +1,4 @@
-FROM        arm64v8/eclipse-temurin:17.0.3_7-jdk
+FROM        eclipse-temurin:17.0.3_7-jdk
 LABEL       app=ssss
 RUN         addgroup --system app && adduser --system --no-create-home --ingroup app app
 USER        app
