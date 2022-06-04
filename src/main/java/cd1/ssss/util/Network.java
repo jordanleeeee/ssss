@@ -1,4 +1,4 @@
-package cd1.ssss.service;
+package cd1.ssss.util;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
