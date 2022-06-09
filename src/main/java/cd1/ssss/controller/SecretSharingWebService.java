@@ -10,8 +10,6 @@ import cd1.ssss.api.SecretSharingWebServiceInterface;
 import cd1.ssss.service.ConstructShareService;
 import cd1.ssss.service.RecoverSecretService;
 import cd1.ssss.service.TextShare;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,7 +26,6 @@ import java.util.List;
  */
 @RestController
 public class SecretSharingWebService implements SecretSharingWebServiceInterface {
-    private final Logger logger = LoggerFactory.getLogger(SecretSharingWebService.class);
     @Autowired
     ConstructShareService constructShareService;
     @Autowired
@@ -106,8 +103,7 @@ public class SecretSharingWebService implements SecretSharingWebServiceInterface
             response.shares = shares;
             return response;
         } catch (IOException e) {
-            logger.error("read file error", e);
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "fail on reading input file");
+            throw new Error("fail on reading input file", e);
         }
     }
 }

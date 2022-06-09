@@ -1,7 +1,7 @@
 package cd1.ssss.config;
 
-import cd1.ssss.service.GF2PowerOfN;
-import cd1.ssss.service.PrimeField;
+import cd1.ssss.finitefield.GF2PowerOfN;
+import cd1.ssss.finitefield.PrimeField;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
  * @author Jordan
  */
 @Configuration
-public class Config {
+public class FiniteFieldConfig {
     @Bean
     public PrimeField primeField() {
         return new PrimeField(13);

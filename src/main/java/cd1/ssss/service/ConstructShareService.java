@@ -1,5 +1,6 @@
 package cd1.ssss.service;
 
+import cd1.ssss.finitefield.FiniteField;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
