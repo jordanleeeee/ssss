@@ -11,14 +11,14 @@ import javax.annotation.Resource;
 @Component
 public class ConstructShareService {
     @Resource
-    FiniteField extensionField;
+    FiniteField extensionField32;
 
     public int[] constructPoints(int secret, int n, int t) {
         int[] coefficient = new int[t];
 
         coefficient[0] = secret;
         for (int i = 1; i < coefficient.length; i++) {
-            coefficient[i] = extensionField.randElement(true);
+            coefficient[i] = extensionField32.randElement(true);
         }
 
         int[] shares = new int[n];
@@ -36,7 +36,7 @@ public class ConstructShareService {
             int[] coefficient = new int[t];
             coefficient[0] = unsignedIntSecret;
             for (int j = 1; j < coefficient.length; j++) {
-                coefficient[j] = extensionField.randElement(true);
+                coefficient[j] = extensionField32.randElement(true);
             }
 
             for (int j = 1; j <= shares.length; j++) {
@@ -51,8 +51,8 @@ public class ConstructShareService {
         int val = 1;
         int result = 0;
         for (int coef : coefficient) {
-            result = extensionField.add(result, extensionField.multiply(coef, val));
-            val = extensionField.multiply(val, x);
+            result = extensionField32.add(result, extensionField32.multiply(coef, val));
+            val = extensionField32.multiply(val, x);
         }
         return result;
     }
