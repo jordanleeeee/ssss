@@ -20,11 +20,14 @@ public class AspectConfig {
     @Around("execution(* cd1.ssss.controller.*.*(..))")
     public Object timeTracker(ProceedingJoinPoint joinPoint) throws Throwable {
         long start = System.nanoTime();
+        boolean success = false;
         try {
             logger.info("received request: {}", joinPoint.getSignature());
-            return joinPoint.proceed();
+            Object proceed = joinPoint.proceed();
+            success = true;
+            return proceed;
         } finally {
-            logger.info("request completed, elapse={}", System.nanoTime() - start);
+            logger.info("request {}, elapse={}", success ? "success" : "failed", System.nanoTime() - start);
         }
     }
 
