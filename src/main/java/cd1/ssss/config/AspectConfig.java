@@ -17,7 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class AspectConfig {
     private final Logger logger = LoggerFactory.getLogger(AspectConfig.class);
 
-    @Around(value = "execution(* cd1.ssss.controller.*.*(..))")
+    @Around("execution(* cd1.ssss.controller.*.*(..))")
     public Object timeTracker(ProceedingJoinPoint joinPoint) throws Throwable {
         long start = System.nanoTime();
         try {
@@ -28,7 +28,7 @@ public class AspectConfig {
         }
     }
 
-    @Around(value = "execution(* cd1.ssss.controller.*.*(..))")
+    @Around("execution(* cd1.ssss.controller.*.*(..))")
     public Object errorHandler(ProceedingJoinPoint joinPoint) {
         try {
             return joinPoint.proceed();

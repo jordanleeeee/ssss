@@ -1,12 +1,13 @@
 package cd1.ssss.finitefield;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author Jordan
  */
 public class GF2PowerOfN implements FiniteField {
-    public static final Random RANDOM = new Random();
+    public static final Random RANDOM = ThreadLocalRandom.current();
     private final int n;
     private final int size; // 2^n
     private final int irreduciblePolynomialsInNum;

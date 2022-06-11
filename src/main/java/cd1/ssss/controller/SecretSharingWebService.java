@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -34,7 +35,7 @@ public class SecretSharingWebService implements SecretSharingWebServiceInterface
     @Override
     public CreateShareResponse createIntegerShares(CreateShareRequest request) {
         int[] points = constructShareService.constructPoints(request.secret, request.numberOfShares, request.threshold);
-        List<String> shares = new ArrayList<>();
+        List<String> shares = new ArrayList<>(points.length);
         for (int i = 0; i < points.length; i++) {
             shares.add(i + 1 + ";" + points[i]);
         }
@@ -59,8 +60,8 @@ public class SecretSharingWebService implements SecretSharingWebServiceInterface
 
     @Override
     public CreateShareResponse createTextShares(CreateTextShareRequest request) {
-        byte[][] bytes = constructShareService.constructTextShares(request.secret.getBytes(), request.numberOfShares, request.threshold);
-        List<String> shares = new ArrayList<>();
+        byte[][] bytes = constructShareService.constructTextShares(request.secret.getBytes(StandardCharsets.UTF_8), request.numberOfShares, request.threshold);
+        List<String> shares = new ArrayList<>(bytes.length);
         for (int i = 0; i < bytes.length; i++) {
             shares.add(i + 1 + ";" + Base64.getEncoder().encodeToString(bytes[i]));
         }
@@ -71,31 +72,13 @@ public class SecretSharingWebService implements SecretSharingWebServiceInterface
     }
 
     @Override
-    public RecoverTextSecretResponse recoverTextSecret(RecoverSecretRequest request) {
-        byte[] bytes = recoverSecretService.recoverStringSecret(
-                request.shares.stream().map(share -> {
-                    String[] parts = share.split(";");
-
-                    var textShare = new TextShare();
-                    textShare.x = Integer.parseInt(parts[0]);
-                    textShare.bytes = Base64.getDecoder().decode(parts[1]);
-                    return textShare;
-                }).toList()
-        );
-
-        var response = new RecoverTextSecretResponse();
-        response.secret = new String(bytes);
-        return response;
-    }
-
-    @Override
     public CreateShareResponse createTextShares(MultipartFile file, int numberOfShare, int threshold) {
         if (!"text/plain".equals(file.getContentType())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "file must be with content type: text/plain");
         }
         try {
             byte[][] bytes = constructShareService.constructTextShares(file.getBytes(), numberOfShare, threshold);
-            List<String> shares = new ArrayList<>();
+            List<String> shares = new ArrayList<>(bytes.length);
             for (int i = 0; i < bytes.length; i++) {
                 shares.add(i + 1 + ";" + Base64.getEncoder().encodeToString(bytes[i]));
             }
@@ -105,5 +88,23 @@ public class SecretSharingWebService implements SecretSharingWebServiceInterface
         } catch (IOException e) {
             throw new Error("fail on reading input file", e);
         }
+    }
+
+    @Override
+    public RecoverTextSecretResponse recoverTextSecret(RecoverSecretRequest request) {
+        byte[] bytes = recoverSecretService.recoverStringSecret(
+            request.shares.stream().map(share -> {
+                String[] parts = share.split(";");
+
+                var textShare = new TextShare();
+                textShare.x = Integer.parseInt(parts[0]);
+                textShare.bytes = Base64.getDecoder().decode(parts[1]);
+                return textShare;
+            }).toList()
+        );
+
+        var response = new RecoverTextSecretResponse();
+        response.secret = new String(bytes, StandardCharsets.UTF_8);
+        return response;
     }
 }

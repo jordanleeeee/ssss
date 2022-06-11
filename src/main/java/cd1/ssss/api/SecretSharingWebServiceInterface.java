@@ -20,9 +20,9 @@ public interface SecretSharingWebServiceInterface {
     @PutMapping(path = "/text/share", consumes = "application/json")
     CreateShareResponse createTextShares(@RequestBody CreateTextShareRequest request);
 
+    @PutMapping(path = "/file/share", consumes = "multipart/form-data")
+    CreateShareResponse createTextShares(@RequestParam("file") MultipartFile file, @RequestParam("n") int numberOfShare, @RequestParam("t") int threshold);
+
     @PutMapping(path = "/text/recover", consumes = "application/json")
     RecoverTextSecretResponse recoverTextSecret(@RequestBody RecoverSecretRequest request);
-
-    @PutMapping(path = "/file/share", consumes = "multipart/form-data")
-    CreateShareResponse createTextShares(@RequestParam(value = "file") MultipartFile file, @RequestParam(value = "n") int numberOfShare, @RequestParam(value = "t") int threshold);
 }

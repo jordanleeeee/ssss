@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HealthCheckWebService {
     @GetMapping("/ping")
-    String ping(){
+    String ping() {
         return "pong: " + Network.LOCAL_HOST_NAME;
     }
 }
