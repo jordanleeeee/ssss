@@ -38,7 +38,7 @@ public class AspectConfig {
         } catch (ResponseStatusException e) {
             throw e;
         } catch (Throwable e) {
-            logger.error("unexpected error, error={}", e.getMessage());
+            logger.error("unexpected error", e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }

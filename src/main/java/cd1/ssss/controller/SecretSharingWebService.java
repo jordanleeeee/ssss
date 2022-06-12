@@ -10,11 +10,10 @@ import cd1.ssss.api.SecretSharingWebServiceInterface;
 import cd1.ssss.service.ConstructShareService;
 import cd1.ssss.service.RecoverSecretService;
 import cd1.ssss.service.TextShare;
+import cd1.ssss.util.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -34,6 +33,9 @@ public class SecretSharingWebService implements SecretSharingWebServiceInterface
 
     @Override
     public CreateShareResponse createIntegerShares(CreateShareRequest request) {
+        if (request.threshold > request.numberOfShares) {
+            throw new BadRequestException("number of shares must >= threshold");
+        }
         int[] points = constructShareService.constructPoints(request.secret, request.numberOfShares, request.threshold);
         List<String> shares = new ArrayList<>(points.length);
         for (int i = 0; i < points.length; i++) {
@@ -60,6 +62,9 @@ public class SecretSharingWebService implements SecretSharingWebServiceInterface
 
     @Override
     public CreateShareResponse createTextShares(CreateTextShareRequest request) {
+        if (request.threshold > request.numberOfShares) {
+            throw new BadRequestException("number of shares must >= threshold");
+        }
         byte[][] bytes = constructShareService.constructTextShares(request.secret.getBytes(StandardCharsets.UTF_8), request.numberOfShares, request.threshold);
         List<String> shares = new ArrayList<>(bytes.length);
         for (int i = 0; i < bytes.length; i++) {
@@ -72,12 +77,16 @@ public class SecretSharingWebService implements SecretSharingWebServiceInterface
     }
 
     @Override
-    public CreateShareResponse createTextShares(MultipartFile file, int numberOfShare, int threshold) {
+    public CreateShareResponse createTextShares(MultipartFile file, int numberOfShares, int threshold) {
         if (!"text/plain".equals(file.getContentType())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "file must be with content type: text/plain");
+            throw new BadRequestException("file must be with content type text/plain, but received: " + file.getContentType());
         }
+        if (threshold > numberOfShares) {
+            throw new BadRequestException("number of shares must >= threshold");
+        }
+
         try {
-            byte[][] bytes = constructShareService.constructTextShares(file.getBytes(), numberOfShare, threshold);
+            byte[][] bytes = constructShareService.constructTextShares(file.getBytes(), numberOfShares, threshold);
             List<String> shares = new ArrayList<>(bytes.length);
             for (int i = 0; i < bytes.length; i++) {
                 shares.add(i + 1 + ";" + Base64.getEncoder().encodeToString(bytes[i]));
