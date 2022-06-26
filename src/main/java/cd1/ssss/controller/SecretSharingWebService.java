@@ -26,10 +26,13 @@ import java.util.List;
  */
 @RestController
 public class SecretSharingWebService implements SecretSharingWebServiceInterface {
-    @Autowired
     ConstructShareService constructShareService;
-    @Autowired
     RecoverSecretService recoverSecretService;
+
+    public SecretSharingWebService(@Autowired ConstructShareService constructShareService, @Autowired RecoverSecretService recoverSecretService) {
+        this.constructShareService = constructShareService;
+        this.recoverSecretService = recoverSecretService;
+    }
 
     @Override
     public CreateShareResponse createIntegerShares(CreateShareRequest request) {

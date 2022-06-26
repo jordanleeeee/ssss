@@ -12,8 +12,8 @@ import java.util.List;
  */
 @Component
 public class RecoverSecretService {
-    @Resource
-    FiniteField extensionField32;
+    @Resource(name = "extensionField256")
+    FiniteField finiteField;
 
     public int recoverSecret(List<int[]> shares) {
         int result = 0;
@@ -22,11 +22,11 @@ public class RecoverSecretService {
             int temp = shares.get(i)[1];
             for (int j = 0; j < shares.size(); j++) {
                 if (i != j) {
-                    int fraction = extensionField32.divide(shares.get(j)[0], extensionField32.minus(shares.get(j)[0], shares.get(i)[0]));
-                    temp = extensionField32.multiply(temp, fraction);
+                    int fraction = finiteField.divide(shares.get(j)[0], finiteField.minus(shares.get(j)[0], shares.get(i)[0]));
+                    temp = finiteField.multiply(temp, fraction);
                 }
             }
-            result = extensionField32.add(result, temp);
+            result = finiteField.add(result, temp);
         }
         return result;
     }
