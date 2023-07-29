@@ -19,6 +19,15 @@ public class GF2PowerOfN implements FiniteField {
     }
 
     @Override
+    public String toString() {
+        return "GF2PowerOfN{" +
+            "n=" + n +
+            ", size=" + size +
+            ", irreduciblePolynomialsInNum=" + irreduciblePolynomialsInNum +
+            '}';
+    }
+
+    @Override
     public int add(int a, int b) {
         return a ^ b;
     }
